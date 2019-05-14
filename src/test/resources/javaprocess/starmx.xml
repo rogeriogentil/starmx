@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE starmx PUBLIC "-//STAR Lab//StarMX Configuration DTD 1.0//EN" "../../src/starmx-1.0.dtd" >
+<starmx>
+<!--
+	<mbeanserver lookup-type="jndi" id="ms">
+		<jndi-param jndi-name="jmx/invoker/RMIAdaptor">
+			<property name="java.naming.factory.initial">org.jnp.interfaces.NamingContextFactory</property>
+			<property name="java.naming.provider.url">jnp://localhost:1099</property>
+			<property name="java.naming.factory.url.pkgs">org.jboss.naming:org.jnp.interfaces:org.jboss.naming.client</property>
+		</jndi-param>
+	</mbeanserver>	
+-->	
+	<mbeanserver id="ms" lookup-type="platform" />
+
+	<mbean id="threadMXBean" object-name="java.lang:type=Threading" mbeanserver="ms" interface="java.lang.management.ThreadMXBean"/>
+	<mbean id="myBean1" object-name="starmx:name=mb1,instance=1" mbeanserver="ms" interface="util.MBean1MBean"/>
+	<mbean id="myBean2" object-name="starmx:name=mb2" mbeanserver="ms" />
+
+	<mbean id="myBean1List" object-name="starmx:name=mb1,*" mbeanserver="ms" interface="util.MBean1MBean"/>
+
+	<bean id="sb" class="util.SimpleBean" factory-method="createInstance" />
+	
+	<process id="p2" javaclass="javaprocess.SampleProcess2">
+		<object name="mb1" ref="myBean1" />
+ 		<object name="sb" ref="sb" />  
+ 		<object name="threadMXBean" ref="threadMXBean" />  
+	</process>
+
+	<process id="p1" javaclass="javaprocess.SampleProcess">
+		<object name="mb1List" ref="myBean1List"/>
+	</process>
+
+	<execute >
+		<timer-info interval="5" unit="second" /> 
+		<processref refid="p1" />		
+		<processref refid="p2" />		
+	</execute>
+	
+	<property name="starmx.log.level">debug</property>
+ 
+</starmx>

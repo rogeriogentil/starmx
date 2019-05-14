@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE starmx PUBLIC "-//STAR Lab//StarMX Configuration DTD 1.0//EN" "../../src/starmx-1.0.dtd" >
+<starmx>
+	<mbeanserver id="ms" lookup-type="platform" />
+<!--  	
+	<mbeanserver lookup-type="jndi" id="s3">
+		<jndi-param jndi-name="jmx/invoker/RMIAdaptor">
+			<property name="java.naming.factory.initial">org.jnp.interfaces.NamingContextFactory</property>
+			<property name="java.naming.provider.url">jnp://localhost:1099</property>
+			<property name="java.naming.factory.url.pkgs">org.jboss.naming:org.jnp.interfaces:org.jboss.naming.client</property>
+		</jndi-param>
+	</mbeanserver>
+-->
+	<mbean id="mbean11" object-name="starmx:name=mb1,instance=1" mbeanserver="ms" interface="util.MBean1MBean"/>
+	<mbean id="mbean12" object-name="starmx:name=mb1,instance=2" mbeanserver="ms" interface="util.MBean1MBean"/>
+	<mbean id="mbean1" object-name="starmx:name=mb1,*" mbeanserver="ms" />
+
+	<mbean id="mbean2" object-name="starmx:name=mb2" mbeanserver="ms" />
+  
+  	<execute >
+		<timer-info interval="3" unit="second"/> 
+		<process id="policy1" policy-type="spl" policy-file="Policy1.spl">
+			<object name="mb1_1" ref="mbean11" />
+			<object name="mb1_2" ref="mbean12" />
+		</process>
+  	</execute>
+
+</starmx>

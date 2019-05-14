@@ -1,0 +1,103 @@
+
+Import Class org.apache.log4j.Logger : log ;
+Import Class java.lang.management.RuntimeMXBean : rtmxb ;
+Import Class java.lang.management.ClassLoadingMXBean : clmxb ;
+Import Class java.lang.management.MemoryMXBean : memmxb ;
+Import Class java.lang.management.ThreadMXBean : thrmxb ;
+Import Class java.lang.management.OperatingSystemMXBean : osmxb ;
+Import Class java.lang.management.CompilationMXBean : cmxb ;
+Import Class java.lang.management.MemoryPoolMXBean  : mpmxb ;
+
+
+Strategy Execute_All_Applicable;
+Policy 
+{
+	Condition 
+	{ 
+		rtmxb.uptime > 5000 
+	}
+	
+	Decision 
+	{   
+		log.info("runtime")
+	}
+}:1;
+
+Policy 
+{
+	Condition 
+	{ 
+		clmxb.loadedClassCount > 500 
+	}
+	
+	Decision 
+	{   
+		log.info("classloading")
+	}
+}:1;
+
+Policy 
+{
+	Condition 
+	{ 
+		//thrmxb.threadCpuTimeEnabled
+		thrmxb.currentThreadUserTime > 1000 
+	}
+	
+	Decision 
+	{   
+		log.info("thread")
+	}
+}:1;
+
+Policy 
+{
+	Condition 
+	{ 
+		osmxb.availableProcessors > 2 
+	}
+	
+	Decision 
+	{   
+		log.info("OS")
+	}
+}:1;
+
+Policy 
+{
+	Condition 
+	{ 
+		cmxb.compilationTimeMonitoringSupported == true 
+	}
+	
+	Decision 
+	{   
+		log.info("Compilation")
+	}
+}:1;
+
+Policy 
+{
+	Condition 
+	{ 
+		mpmxb.usage.getUsed() > 10000 
+	}
+	
+	Decision 
+	{   
+		log.info("mem-pool")
+	}
+}:1;
+
+Policy 
+{
+	Condition 
+	{ 
+		memmxb.heapMemoryUsage.getUsed() > 1000000 
+	}
+	
+	Decision 
+	{   
+		log.info("memory")
+	}
+}:1;

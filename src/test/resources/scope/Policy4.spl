@@ -1,0 +1,23 @@
+
+Import Class mb2@StarMX : mb2 ;
+Import Class org.starmx.core.ExecutionContext : context;
+
+Strategy Execute_All_Applicable;
+Policy 
+{
+	Declaration {
+		var = context.executionScope.getAttribute("xyz");
+	}
+	Condition 
+	{  
+		context.notification.sequenceNumber >= 0
+	}
+
+	Decision 
+	{
+		mb2.hello(var) ->  context.executionScope.setAttribute("xyz","444")
+	}
+}:1;
+
+
+

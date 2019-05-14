@@ -1,0 +1,95 @@
+<!ELEMENT bean EMPTY >
+<!ATTLIST bean id ID #REQUIRED >
+<!ATTLIST bean class CDATA #REQUIRED >
+<!ATTLIST bean factory-method CDATA #IMPLIED >
+
+<!ELEMENT counter-monitor EMPTY >
+<!ATTLIST counter-monitor init-threshold CDATA #REQUIRED>
+<!ATTLIST counter-monitor notify (true | false) #REQUIRED>
+<!ATTLIST counter-monitor offset CDATA #IMPLIED>
+<!ATTLIST counter-monitor modulus CDATA #IMPLIED>
+<!ATTLIST counter-monitor difference-mode (true | false) #IMPLIED>
+	
+<!ELEMENT execute ( (timer-info | notification-info), (process | processref)+ ) >
+<!ATTLIST execute name ID #IMPLIED >
+<!ATTLIST execute listener CDATA #IMPLIED >
+
+<!ELEMENT factory-param EMPTY >
+<!ATTLIST factory-param class CDATA #REQUIRED >
+<!ATTLIST factory-param method CDATA #REQUIRED >
+
+<!ELEMENT find-param EMPTY >
+<!ATTLIST find-param agent-id CDATA #IMPLIED >
+<!ATTLIST find-param index CDATA #IMPLIED >
+
+<!ELEMENT gauge-monitor EMPTY >
+<!ATTLIST gauge-monitor high-threshold CDATA #REQUIRED>
+<!ATTLIST gauge-monitor low-threshold CDATA #REQUIRED>
+<!ATTLIST gauge-monitor notify-high (true | false) #IMPLIED>
+<!ATTLIST gauge-monitor notify-low (true | false) #IMPLIED>
+<!ATTLIST gauge-monitor difference-mode (true | false) #IMPLIED>
+
+<!ELEMENT jmx-param ( property* ) >
+<!ATTLIST jmx-param protocol CDATA #IMPLIED >
+<!ATTLIST jmx-param host CDATA #IMPLIED >
+<!ATTLIST jmx-param port CDATA #IMPLIED >
+<!ATTLIST jmx-param url-path CDATA #IMPLIED >
+<!ATTLIST jmx-param service-url CDATA #IMPLIED >
+
+<!ELEMENT jndi-param ( property* ) >
+<!ATTLIST jndi-param jndi-name CDATA #REQUIRED >
+
+<!ELEMENT mbean ( property* ) >
+<!ATTLIST mbean id ID #REQUIRED >
+<!ATTLIST mbean object-name CDATA #REQUIRED >
+<!ATTLIST mbean interface CDATA #IMPLIED>
+<!ATTLIST mbean mbeanserver IDREF #REQUIRED >
+
+<!ELEMENT mbeanserver ( (find-param | jndi-param | jmx-param | factory-param)? ) >
+<!ATTLIST mbeanserver id ID #REQUIRED >
+<!ATTLIST mbeanserver lookup-type (platform|jndi|jmx|find|factory) #REQUIRED >
+
+<!ELEMENT monitor-mbean ((counter-monitor | gauge-monitor | string-monitor), observed-object+ ) >
+<!ATTLIST monitor-mbean	id ID #REQUIRED >
+<!ATTLIST monitor-mbean	observed-attribute CDATA #REQUIRED >
+<!ATTLIST monitor-mbean	granularity-period CDATA #REQUIRED >
+<!ATTLIST monitor-mbean	object-name CDATA #REQUIRED >
+<!ATTLIST monitor-mbean mbeanserver IDREF #REQUIRED >
+	
+<!ELEMENT notification-info EMPTY >
+<!ATTLIST notification-info emitter-mbean-ref CDATA #REQUIRED >
+<!ATTLIST notification-info event-type CDATA #IMPLIED >
+<!ATTLIST notification-info event-class CDATA #IMPLIED >
+<!ATTLIST notification-info event-handling (synch|asynch) #IMPLIED >
+
+<!ELEMENT object EMPTY >
+<!ATTLIST object name CDATA #REQUIRED >
+<!ATTLIST object ref IDREF #REQUIRED >
+
+<!ELEMENT observed-object EMPTY >
+<!ATTLIST observed-object object-name CDATA #REQUIRED >
+
+<!ELEMENT process ( object* ) >
+<!ATTLIST process id ID #REQUIRED >
+<!ATTLIST process policy-type CDATA #IMPLIED >
+<!ATTLIST process policy-file CDATA #IMPLIED >
+<!ATTLIST process javaclass CDATA #IMPLIED >
+
+<!ELEMENT processref EMPTY >
+<!ATTLIST processref refid IDREF #REQUIRED >
+
+<!ELEMENT property ( #PCDATA ) >
+<!ATTLIST property name CDATA #REQUIRED >
+
+<!ELEMENT starmx ( mbeanserver*, monitor-mbean*, mbean*, bean*, process*, execute*, property*) >
+
+<!ELEMENT string-monitor EMPTY >
+<!ATTLIST string-monitor string-to-compare CDATA #REQUIRED>
+<!ATTLIST string-monitor notify-match (true | false) #IMPLIED>
+<!ATTLIST string-monitor notify-differ (true | false) #IMPLIED>
+	
+<!ELEMENT timer-info EMPTY >
+<!ATTLIST timer-info interval CDATA #REQUIRED >
+<!ATTLIST timer-info unit (second|minute|hour|day|week|month) #IMPLIED >
+<!ATTLIST timer-info first-exec-time CDATA #IMPLIED >
+<!ATTLIST timer-info first-exec-delay CDATA #IMPLIED >

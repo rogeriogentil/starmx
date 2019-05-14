@@ -1,0 +1,18 @@
+
+Import Class mb1_1@StarMX : mb1_1 ;
+Import Class org.starmx.core.ExecutionContext : context;
+
+Strategy Execute_All_Applicable;
+Policy 
+{
+	Condition 
+	{ 
+		mb1_1.seq < 5  && context.timerEvent.getSequenceNumber() > 0
+	}
+	
+	Decision 
+	{   
+		mb1_1.process()
+	}
+}:1;
+

@@ -1,0 +1,16 @@
+Import Class mb1@StarMX : mb1 ;
+Import Class mb2@StarMX : mb2 ;
+Import Class wlrsmb@StarMX : wlrsmb ;
+
+Strategy Execute_All_Applicable;
+Policy 
+{
+	Condition 
+	{  
+		mb1.seq < 10
+	}
+	Decision 
+	{   
+	    mb2.hello(wlrsmb.name)
+	}
+}:1;

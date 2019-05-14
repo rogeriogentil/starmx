@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE starmx PUBLIC "-//STAR Lab//StarMX Configuration DTD 1.0//EN" "../src/starmx-1.0.dtd" >
+<starmx>
+ 
+	<mbeanserver id="wls_remote_ms1" lookup-type="jmx">
+		<jmx-param protocol="t3" host="localhost" port="7001" url-path="/jndi/weblogic.management.mbeanservers.domainruntime">
+			<property name="java.naming.security.principal">weblogic</property>
+			<property name="java.naming.security.credentials">weblogic</property>
+			<property name="jmx.remote.protocol.provider.pkgs">weblogic.management.remote</property>
+		</jmx-param>
+	</mbeanserver>
+
+<!--  
+	This does not work !!! why?
+	<mbeanserver id="wls_ms2" lookup-type="jmx">
+		<jmx-param
+			service-url="service:jmx:rmi:///jndi/iiop://localhost:7001/weblogic.management.mbeanservers.domainruntime">
+			<property name="java.naming.security.principal">weblogic</property>
+			<property name="java.naming.security.credentials">weblogic</property>
+		</jmx-param>
+	</mbeanserver>
+-->
+<!--   
+	<mbeanserver id="wls_local_ms1" lookup-type="jndi">
+		<jndi-param jndi-name="java:comp/jmx/runtime" />
+	</mbeanserver>
+-->
+	<mbeanserver id="pms" lookup-type="platform" />
+ 
+	<mbean id="wlServiceMBean" 
+		object-name="com.bea:Name=DomainRuntimeService,Type=weblogic.management.mbeanservers.domainruntime.DomainRuntimeServiceMBean" 
+		mbeanserver="wls_remote_ms1" />
+<!-- 
+	<mbean id="wlServiceMBean" 
+		object-name="com.bea:Name=RuntimeService,Type=weblogic.management.mbeanservers.runtime.RuntimeServiceMBean" 
+		mbeanserver="wls_local_ms1" />
+ -->
+	<mbean id="myBean1" object-name="starmx:name=mb1,instance=1" mbeanserver="pms" />
+	<mbean id="myBean2" object-name="starmx:name=mb2" mbeanserver="pms" />
+
+	<policy name="policy1" type="spl" file="test_wl.spl">
+
+		<object name="mb1" ref="myBean1" />
+		<object name="mb2" ref="myBean2" />
+		<object name="wlrsmb" ref="wlServiceMBean" />
+
+		<evaluate mechanism="timer" >
+			<timer-info interval="3" unit="second" /> 
+		</evaluate>
+	</policy>
+
+<!--
+	<property name="starmx.mbean.history_size">10</property>
+	<property name="starmx.mbean.add_to_history_strategy">anyRead/firstReadInPolicyExecution(default)</property>
+	<property name="starmx.mbean.cache_attr_in_policy_execution">true/false</property>
+	<property name="starmx.mbean.convert_objectname_to_mbean">true(default)/false</property>
+	<property name="starmx.log.dir">C:\Java\jboss-5.0.0.Beta4\server\default\log</property>
+-->
+	<property name="starmx.log.level">debug</property>
+	<property name="starmx.policy.onError">retry</property>
+	<property name="starmx.policy.onError.retryCount">2</property>
+
+</starmx>

@@ -1,0 +1,48 @@
+
+Import Class mb1_1@StarMX : mb1_1 ;
+Import Class org.starmx.core.ExecutionContext : context;
+
+Strategy Execute_All_Applicable;
+Policy 
+{
+	Condition 
+	{ 
+		mb1_1.seq < 5  && context.timerEvent.sequenceNumber > 0
+	}
+	
+	Decision 
+	{   
+		context.executionScope.setAttribute("xyz","222") -> mb1_1.process() -> context.starMXScope.setAttribute("test","abc")
+	}
+}:1;
+
+Policy 
+{
+	
+	Condition 
+	{ 
+		StringLength(context.policyScope.getAttribute("local")) == 0
+	}
+	
+	Decision 
+	{   
+		context.policyScope.setAttribute("local","policy2")
+	}
+}:1;
+
+Policy 
+{
+	Declaration {
+		var = context.policyScope.getAttribute("local");
+		var2 = context.executionScope.getAttribute("xyz");
+	}
+	Condition 
+	{ 
+		StringLength(var) > 0
+	}
+	
+	Decision 
+	{   
+		mb1_1.print(var) -> mb1_1.print(var2)
+	}
+}:1;

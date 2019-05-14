@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE starmx PUBLIC "-//STAR Lab//StarMX Configuration DTD 1.0//EN" "../src/starmx-1.0.dtd" >
+<starmx>
+<!--
+	<mbeanserver lookup-type="jndi" id="ms">
+		<jndi-param jndi-name="jmx/invoker/RMIAdaptor">
+			<property name="java.naming.factory.initial">org.jnp.interfaces.NamingContextFactory</property>
+			<property name="java.naming.provider.url">jnp://localhost:1099</property>
+			<property name="java.naming.factory.url.pkgs">org.jboss.naming:org.jnp.interfaces:org.jboss.naming.client</property>
+		</jndi-param>
+	</mbeanserver>	
+-->	
+	<mbeanserver id="ms" lookup-type="platform" />
+<!-- 
+	<mbeanserver id="ms2" lookup-type="jmx" >
+	    <jmx-param service-url="service:jmx:rmi://localhost/jndi/rmi://localhost:1090/jmxconnector" />
+	</mbeanserver>
+
+	<monitor-mbean id="monitor1" observed-attribute="name" granularity-period="1000" mbeanserver="ms2" object-name="starmx:type=monitor,name=cm" >
+		<counter-monitor init-threshold="100" notify="true" modulus="5" offset="8" difference-mode="true"/>
+		<observed-object object-name="starmx:name=abc"/>
+		<observed-object object-name="starmx:name=xyz"/>
+		<observed-object object-name="starmx:name=def"/>
+	</monitor-mbean>
+	
+	<monitor-mbean id="monitor2" observed-attribute="name" granularity-period="1000" mbeanserver="ms2" object-name="starmx:type=monitor,name=gm" >
+		<gauge-monitor high-threshold="100" low-threshold="10" notify-high="true" notify-low="false" difference-mode="true"/>
+		<observed-object object-name="starmx:name=abc"/>
+		<observed-object object-name="starmx:name=xyz"/>
+		<observed-object object-name="starmx:name=def"/>
+	</monitor-mbean>
+
+	<monitor-mbean id="monitor3" observed-attribute="name" granularity-period="1000" mbeanserver="ms2" object-name="starmx:type=monitor,name=sm" >
+		<string-monitor string-to-compare="aabbcc" notify-differ="true" notify-match="false"/>
+		<observed-object object-name="starmx:name=abc"/>
+		<observed-object object-name="starmx:name=xyz"/>
+		<observed-object object-name="starmx:name=def"/>
+	</monitor-mbean>
+-->
+	<mbean id="myBean1" object-name="starmx:name=mb1,instance=1" mbeanserver="ms" />
+
+	<mbean id="myBean2" object-name="starmx:name=mb2" mbeanserver="ms" />
+	<bean id="sb" class="util.SimpleBean" factory-method="createInstance" />
+	
+	<process id="policy1" policy-type="spl" policy-file="policy1.spl">
+		<object name="mb1" ref="myBean1" />
+		<object name="mb2" ref="myBean2" />
+	</process>
+
+	<process id="policy2" policy-type="spl" policy-file="policy2.spl">
+		<object name="sb" ref="sb" />
+	</process>
+
+	<process id="policy3" policy-type="spl" policy-file="policy3.spl">
+		<object name="mb1" ref="myBean1" />
+		<object name="mb2" ref="myBean2" />
+		<object name="sb" ref="sb" />
+	</process>
+
+	<process id="policy4" policy-type="spl" policy-file="sample_policy.spl" >
+		<object name="mb2" ref="myBean2" />
+		<object name="mb1" ref="myBean1" /> 
+	</process> 
+
+
+	<execute >
+		<timer-info interval="5" unit="second" /> 
+		
+		<processref refid="policy3" />		
+
+	</execute>
+	
+<!-- 		
+	<policy name="policy1" type="spl" file="policy1.spl">
+
+		<object name="mb1" ref="myBean1" />
+		<object name="mb2" ref="myBean2" />
+
+		<evaluate mechanism="timer" >
+			<timer-info interval="4" unit="second" /> 
+		</evaluate>
+	</policy>
+
+	<policy name="policy2" type="spl" file="policy2.spl">
+
+		<object name="sb" ref="sb" />
+		<evaluate mechanism="enforced" />
+		
+	</policy>
+ -->
+
+<!--
+	<property name="starmx.mbean.history_size">10</property>
+	<property name="starmx.mbean.add_to_history_strategy">anyRead/firstReadInPolicyExecution(default)</property>
+	<property name="starmx.mbean.cache_attr_in_policy_execution">true/false</property>
+	<property name="starmx.mbean.convert_objectname_to_mbean">true(default)/false</property>
+	<property name="starmx.log.dir">C:\Java\jboss-5.0.0.Beta4\server\default\log</property>
+	<property name="starmx.policy.onError">retry</property>
+	<property name="starmx.policy.onError.retryCount">2</property>
+-->
+	<property name="starmx.log.level">debug</property>
+ 
+</starmx>

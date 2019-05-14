@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE starmx PUBLIC "-//STAR Lab//StarMX Configuration DTD 1.0//EN" "../../src/starmx-1.0.dtd" >
+<starmx>
+	<mbeanserver id="ms" lookup-type="platform" />
+<!-- 
+	<monitor-mbean id="monitor1" observed-attribute="Value" granularity-period="1000" mbeanserver="ms" object-name="starmx:type=monitor,name=gm" >
+		<gauge-monitor high-threshold="20.5" low-threshold="8.1" notify-high="true" notify-low="true" difference-mode="false"/>
+		<observed-object object-name="starmx:name=mb1,instance=1"/>
+	</monitor-mbean>
+-->
+	<monitor-mbean id="monitor2" observed-attribute="Value" granularity-period="1000" mbeanserver="ms" object-name="starmx:type=monitor,name=cm" >
+		<counter-monitor init-threshold="20" notify="true" difference-mode="false"/>
+		<observed-object object-name="starmx:name=mb1,instance=1"/>
+	</monitor-mbean>
+
+	<execute >
+		<notification-info emitter-mbean-ref="monitor2" event-type="jmx.monitor.counter.threshold"/>
+		<process id="p1" javaclass="monitor.MonitorNotifiedProcess" />
+	</execute>
+
+<!--
+	<property name="starmx.mbean.history_size">10</property>
+	<property name="starmx.mbean.add_to_history_strategy">anyRead/firstReadInPolicyExecution(default)</property>
+	<property name="starmx.mbean.cache_attr_in_policy_execution">true/false</property>
+	<property name="starmx.mbean.convert_objectname_to_mbean">true(default)/false</property>
+	<property name="starmx.log.dir">C:\Java\jboss-5.0.0.Beta4\server\default\log</property>
+	<property name="starmx.policy.onError">retry</property>
+	<property name="starmx.policy.onError.retryCount">2</property>
+-->
+	<property name="starmx.log.level">debug</property>
+ 
+</starmx>

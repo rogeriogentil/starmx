@@ -1,0 +1,17 @@
+
+Import Class mb1_2@StarMX : mb1_2 ;
+Import Class org.starmx.core.ExecutionContext : context;
+
+Strategy Execute_All_Applicable;
+Policy 
+{
+	Condition 
+	{  
+		mb1_2.seq < 6
+	}
+
+	Decision 
+	{
+		mb1_2.process()    
+	}
+}:1;

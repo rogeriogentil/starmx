@@ -1,0 +1,36 @@
+Import Class mb1_1@StarMX : mb1_1 ;
+Import Class org.starmx.core.ExecutionContext : context;
+
+Strategy Execute_All_Applicable;
+Policy 
+{
+	Condition 
+	{ 
+		mb1_1.seq < 5  && context.timerEvent.getSequenceNumber() > 0
+	}
+	
+	Decision 
+	{   
+		context.executionScope.setAttribute("xyz","222") -> mb1_1.process()
+		//mb1_1.setStr("222") 
+	}
+}:1;
+
+Policy 
+{
+	Declaration {
+//		var = context.executionScope.getAttribute("xyz");
+//		var = mb1_1.str;
+	}
+	
+	Condition 
+	{ 
+//		StringLength(ToString(var)) > 0
+		1 == 1
+	}
+	
+	Decision 
+	{   
+		mb1_1.print("123")
+	}
+}:1;

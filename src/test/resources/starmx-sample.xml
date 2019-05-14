@@ -1,0 +1,61 @@
+<!-- THIS IS A SAMPLE STARMX.XML FILE, DESIGNED FOR ILLUSTRATION PURPOSE ONLY -->
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE starmx PUBLIC "-//STAR Lab//StarMX Configuration DTD 1.0//EN" "starmx-1.0.dtd">
+<starmx>
+
+    <mbeanserver id="wls_remote_ms" lookup-type="jmx">
+        <jmx-param protocol="t3" host="localhost" port="7001"
+            url-path="/jndi/weblogic.management.mbeanservers.domainruntime">
+            <property name="java.naming.security.principal">weblogic</property>
+            <property name="java.naming.security.credentials">weblogic</property>
+            <property name="jmx.remote.protocol.provider.pkgs">weblogic.management.remote</property>
+        </jmx-param>
+    </mbeanserver>
+
+    <mbean id="wlServiceMBean"
+        object-name="com.bea:Name=DomainRuntimeService,
+            Type=weblogic.management.mbeanservers.domainruntime.DomainRuntimeServiceMBean"
+        mbeanserver="wls_remote_ms" />
+
+    <mbean id="mbean1" object-name="starmx:name=mb1" mbeanserver="wls_remote_ms" />
+    <mbean id="mbean2" object-name="starmx:name=mb2" mbeanserver="wls_remote_ms" />
+
+	<bean id="mailSender" class="util.MailSender" />
+	
+    <monitor-mbean  id="gaugeMonitor"
+                    observed-attribute="size" granularity-period="1000"
+                    mbeanserver="wls_remote_ms"
+                    object-name="starmx:type=monitor,name=gm" >
+        <gauge-monitor high-threshold="100" low-threshold="10" notify-high="true" />
+        <observed-object object-name="starmx:type=Control,name=*"/>
+    </monitor-mbean>
+
+    <process id="proc1" policy-type="spl" policy-file="policy1.spl">
+        <object name="wldrsmb" ref="wlServiceMBean" />
+        <object name="mailSender" ref="mailSender" />
+    </policy>
+
+    <execute >
+        <timer-info interval="30" unit="second" />
+
+        <processref refid="proc1" />
+        <process id="proc2" policy-type="drl" policy-file="policy2.drl">
+            <object name="mb1" ref="mbean1" />
+            <object name="mb2" ref="mbean2" />
+        </process>
+    </execute>
+
+    <execute >
+        <notification-info  emitter-mbean="gaugeMonitor"
+                            event-type="jmx.monitor.gauge.high" />
+
+        <processref refid="proc1" />
+        <process id="proc3" javaclass="test.MySampleProcess">
+            <object name="monitor" ref="gaugeMonitor" />
+        </process>
+    </execute>
+
+    <property name="starmx.log.level">warn</property>
+    <property name="starmx.log.dir">/starmx/log</property>
+    <property name="starmx.policy.adapter.drl">sample.policy.DroolsPolicyAdapter</property>
+</starmx>

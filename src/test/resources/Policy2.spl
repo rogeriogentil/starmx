@@ -1,0 +1,14 @@
+Import Class util.SimpleBean : sb;
+
+Strategy Execute_All_Applicable;
+Policy 
+{
+	Condition 
+	{  
+		sb.id > 5
+	}
+	Decision 
+	{   
+	    sb.printId()
+	}
+}:1;

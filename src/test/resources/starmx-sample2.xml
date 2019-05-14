@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE starmx PUBLIC "-//STAR Lab//StarMX Configuration DTD 1.0//EN" "../src/starmx-1.0.dtd" >
+<starmx>
+	<mbeanserver id="s1" lookup-type="platform" />
+
+	<mbeanserver id="s2" lookup-type="find">
+		<find-param agent-id="" index="" />
+	</mbeanserver>
+
+	<mbeanserver id="s3" lookup-type="jndi">
+		<jndi-param jndi-name="">
+			<property name="username">reza</property>
+			<property name="password">123</property>
+		</jndi-param>
+	</mbeanserver>
+
+	<mbeanserver id="s4" lookup-type="factory">
+		<factory-param class="" method="" />
+	</mbeanserver>
+
+	<mbeanserver id="wls_ms1" lookup-type="jmx">
+		<jmx-param
+			service-url="service:jmx:rmi:///jndi/iiop://localhost:7001/weblogic.management.mbeanservers.runtime">
+			<property name="java.naming.security.principal">weblogic</property>
+			<property name="java.naming.security.credentials">weblogic</property>
+		</jmx-param>
+	</mbeanserver>
+
+	<mbeanserver id="wls_ms2" lookup-type="jmx">
+		<jmx-param protocol="t3" host="localhost" port="7001" url-path="/jndi/weblogic.management.mbeanservers.domainruntime">
+			<property name="java.naming.security.principal">weblogic</property>
+			<property name="java.naming.security.credentials">weblogic</property>
+			<property name="jmx.remote.protocol.provider.pkgs">weblogic.management.remote</property>
+		</jmx-param>
+	</mbeanserver>
+
+	<mbeanserver id="jboss_ms" lookup-type="jmx" >
+	    <jmx-param service-url="service:jmx:rmi://localhost/jndi/rmi://localhost:1090/jmxconnector" />
+	</mbeanserver>
+
+	<mbean id="mbean1" object-name="domain:key1=val1,key2=val2"
+		mbeanserver="s2" interface="optional - mbean implemented interface">
+		<!--OPTIONAL SECTION-->
+		<property name="starmx.mbean.convert_objectname_to_mbean">false</property>
+		<property name="testprop">val</property>
+	</mbean>
+	
+	<mbean id="myBeanList" object-name="domain:key1=val1,*"	mbeanserver="s4" />
+	
+	<bean id="aBean" class="mbeangen.Simple" />
+	
+<!-- 	<webservice id="ws1" wsdl="" />  -->
+	
+	<policy name="policy1" type="spl" file="Policy1.spl">
+		<!-- MBeans or POJOs to be injected to the policy at runtime -->
+		<!--
+			<object name="obj1" type="mbean(default) | bean | spring-bean |
+			webservice" ref="mbean1" />
+		-->
+		<object name="obj1" ref="mbean1" />
+		<object name="obj2" ref="aBean" />
+		<object name="obj3" ref="myBeanList" />
+		<!--
+			for Spring integration look at the WebWork/Struts and Spring
+			integration
+		-->
+		<!--
+			the notification object is injected into the policy at execution
+			runtime
+		-->
+		<evaluate mechanism="timer">
+			<!--
+				<timer-info interval="5"
+				unit="second(default)|minute|hour|day|week|month"
+				{first-exec-time="18:00" or first-exec-delay="5" second}/>
+			-->
+			<timer-info interval="5" unit="second" first-exec-time="12:00" />
+		</evaluate>
+	</policy>
+	<policy name="policy2" type="spl" file="Policy2.spl">
+		<object name="obj1" ref="mbean1" />
+		<evaluate mechanism="notification">
+			<notification-info event-type="EVENT_TYPE1,EVENT_TYPE2"
+				emitter-mbean="myBean" event-handling="synch"
+				event-class="" />
+		</evaluate>
+	</policy>
+	<property name="starmx.mbean.history_size">10</property>
+	<property name="starmx.mbean.add_to_history_strategy">anyRead/firstReadInPolicyExecution(default)</property>
+	<property name="starmx.mbean.cache_attr_in_policy_execution">true/false</property>
+	<property name="starmx.mbean.convert_objectname_to_mbean">true(default)/false</property>
+
+	<property name="starmx.log.level">debug | info | warn | error | fatal</property>
+	<property name="starmx.log.dir">C:\Java\jboss-5.0.0.Beta4\server\default\log</property>
+
+	<property name="starmx.policy.onError">disable(default) | retry</property>
+	<property name="starmx.policy.onError.retryCount">n (default = 0)</property>
+	<property name="starmx.policy.adapter.spl">org.starmx.policy.adapter.imperius.ImperiusPolicyAdapter</property>
+</starmx>

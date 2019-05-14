@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE starmx PUBLIC "-//STAR Lab//StarMX Configuration DTD 1.0//EN" "../../src/starmx-1.0.dtd" >
+<starmx>
+
+	<mbeanserver id="pms" lookup-type="platform" />
+<!--   
+	<mbeanserver id="ms" lookup-type="jmx" >
+		<jmx-param service-url="service:jmx:rmi://localhost/jndi/rmi://localhost:1090/jmxconnector" />
+	</mbeanserver>
+-->
+	<!-- mbean id="mbean1" object-name="starmx:name=mb1,instance=1" mbeanserver="pms" /-->
+
+	<mbean id="runtimeMXbean" object-name="java.lang:type=Runtime" mbeanserver="pms" interface="java.lang.management.RuntimeMXBean"/>
+	<mbean id="classLoadingMXBean" object-name="java.lang:type=ClassLoading" mbeanserver="pms" interface="java.lang.management.ClassLoadingMXBean"/>
+	<mbean id="memoryMXBean" object-name="java.lang:type=Memory" mbeanserver="pms" interface="java.lang.management.MemoryMXBean"/>
+	<mbean id="threadMXBean" object-name="java.lang:type=Threading" mbeanserver="pms" interface="java.lang.management.ThreadMXBean"/>
+	<mbean id="operatingSystemMXBean" object-name="java.lang:type=OperatingSystem" mbeanserver="pms" interface="java.lang.management.OperatingSystemMXBean"/>
+
+	<mbean id="compilationMXBean" object-name="java.lang:type=Compilation" mbeanserver="pms" interface="java.lang.management.CompilationMXBean"/>
+	<mbean id="memoryPoolMXBean" object-name="java.lang:type=MemoryPool,name=Tenured Gen" mbeanserver="pms" interface="java.lang.management.MemoryPoolMXBean"/>
+
+	<execute >
+		<timer-info interval="2" unit="second"/> 
+		<process id="samplePolicy" policy-type="spl" policy-file="policy.spl">
+			<!-- object name="mb1" ref="mbean1" /-->
+			<object name="rtmxb" ref="runtimeMXbean" />
+			<object name="clmxb" ref="classLoadingMXBean" />
+		 	<object name="memmxb" ref="memoryMXBean" />
+			<object name="thrmxb" ref="threadMXBean" />
+			<object name="osmxb" ref="operatingSystemMXBean" />
+			<object name="cmxb" ref="compilationMXBean" />
+			<object name="mpmxb" ref="memoryPoolMXBean" />
+	
+		</process>
+	</execute>
+	
+ 	<property name="starmx.log.level">info</property>
+ 
+</starmx>

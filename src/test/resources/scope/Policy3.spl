@@ -1,0 +1,40 @@
+
+Import Class mb1_2@StarMX : mb1_2 ;
+Import Class org.starmx.core.ExecutionContext : context;
+
+Strategy Execute_All_Applicable;
+Policy 
+{
+	Declaration {
+		var = context.starmxScope.getAttribute("test");
+		var2 = context.executionScope.getAttribute("xyz");
+		
+	}
+	Condition 
+	{  
+		mb1_2.seq < 6
+	}
+
+	Decision 
+	{
+		mb1_2.print(var) -> mb1_2.print(var2) -> context.executionScope.setAttribute("xyz","333") -> mb1_2.process()    
+	}
+}:1;
+
+
+Policy 
+{
+	Declaration {
+		var = context.policyScope.getAttribute("local");
+	}
+	Condition 
+	{ 
+		StringLength(var) > 0
+	}
+	
+	Decision 
+	{   
+		mb1_2.print(var)
+	}
+}:1;
+

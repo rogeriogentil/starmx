@@ -1,0 +1,20 @@
+
+Import Class mb2@StarMX : mb2 ;
+Import Class org.starmx.core.ExecutionContext : context;
+
+Strategy Execute_All_Applicable;
+Policy 
+{
+	Condition 
+	{  
+		context.notification.getSequenceNumber() >= 0
+	}
+
+	Decision 
+	{
+		mb2.hello(context.notification.toString()) 
+	}
+}:1;
+
+
+

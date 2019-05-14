@@ -1,0 +1,18 @@
+Import Class mb1@StarMX : mb1 ;
+Import Class mb2@StarMX : mb2 ;
+//Import Class util.SimpleBean : sb;
+Import Class org.apache.log4j.Logger : log;
+
+
+Strategy Execute_All_Applicable;
+Policy 
+{
+	Condition 
+	{  
+		mb1.seq < 10
+	}
+	Decision 
+	{   
+	    mb2.hello("hi") -> log.info("This is a log message in a policy")
+	}
+}:1;

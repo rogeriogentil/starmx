@@ -1,0 +1,20 @@
+//Import Class STARMX_MBEAN : mb1_1 ;
+Import Class mb1_2@StarMX : mb1_2 ;
+
+Strategy Execute_All_Applicable;
+Policy 
+{
+	Condition 
+	{ 
+//		mb1_1.seq < 5  
+	1==1
+	}
+	
+	Decision 
+	{   
+		mb1_2.print("reza")
+	}
+}:1;
+
+
+

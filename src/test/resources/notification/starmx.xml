@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE starmx PUBLIC "-//STAR Lab//StarMX Configuration DTD 1.0//EN" "main/resources/starmx-1.0.dtd" >
+<starmx>
+
+	<mbeanserver id="ms" lookup-type="platform" />
+<!--     
+	<mbeanserver id="ms" lookup-type="jmx" >
+		<jmx-param service-url="service:jmx:rmi://localhost/jndi/rmi://localhost:1090/jmxconnector" />
+	</mbeanserver>
+-->
+	<mbean id="mbean11" object-name="starmx:name=mb1,instance=1" mbeanserver="ms" />
+	<mbean id="mbean12" object-name="starmx:name=mb1,instance=2" mbeanserver="ms" />
+	<mbean id="mbean1" object-name="starmx:name=mb1,*" mbeanserver="ms" />
+
+	<mbean id="mbean2" object-name="starmx:name=mb2" mbeanserver="ms" />
+  
+	<process id="policy2" policy-type="spl" policy-file="Policy2.spl">
+		<object name="mb1_1" ref="mbean11" />
+	</process>
+ 
+	<process id="policy3" policy-type="spl" policy-file="Policy3.spl">
+		<object name="mb1_2" ref="mbean12" />
+	</process>
+  
+	<process id="policy4" policy-type="spl" policy-file="Policy4.spl">
+		<object name="mb2" ref="mbean2" />
+	</process>
+	
+	<execute >
+		<timer-info interval="10" unit="second" /> 
+		<processref refid="policy2" />		
+	</execute>
+
+	<execute >
+		<timer-info interval="5" unit="second" /> 
+		<processref refid="policy3" />		
+	</execute>
+	<execute >
+		<notification-info event-type="starmx.test.event1" 
+								emitter-mbean-ref="mbean1" 
+								event-handling="synch"	/>			
+		<processref refid="policy4" />		
+	</execute>
+	
+<!-- 
+	<process name="policy5">
+		<splfile>notification/Policy4.spl</splfile>
+
+		<object name="mb2" type="mbean" ref="mbean2" />
+		
+		<evaluate mechanism="timer" >
+			<timer-info interval="5" unit="second"/> 
+		</evaluate>
+	</process>
+-->
+<!-- 
+	<property name="starmx.mbean.history_size">10</property>
+	<property name="starmx.mbean.add_to_history_strategy">anyRead/firstReadInPolicyExecution(default)</property>
+	<property name="starmx.mbean.cache_attr_in_policy_execution">true/false</property>
+	<property name="starmx.mbean.convert_objectname_to_mbean">true(default)/false</property>
+	 -->
+</starmx>

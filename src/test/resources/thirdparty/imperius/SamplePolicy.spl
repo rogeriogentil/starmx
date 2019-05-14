@@ -1,0 +1,18 @@
+Import Class thirdparty.imperius.SimpleBean : bean;
+Strategy Execute_All_Applicable;
+Policy 
+{
+	Declaration
+	{
+	}
+
+	Condition 
+	{  
+	    bean.getId() >= 4
+	}
+
+	Decision 
+	{   
+		Set(bean.id = 3) -> bean.hello() 
+	}
+}:1;
